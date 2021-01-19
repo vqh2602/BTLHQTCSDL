@@ -197,3 +197,13 @@ INSERT INTO dbo.tblChiTietDatHang VALUES
 	(540, 'MH08', 9190000, 4, 0),
 	(540, 'MH14', 19299000, 3, 0),
 	(550, 'MH06', 35500000, 2, 0)
+
+		-- in bảng
+	SELECT * FROM dbo.tblLoaiHang
+	SELECT * FROM dbo.tblMatHang
+	SELECT * FROM dbo.tblKhachHang
+	SELECT * FROM dbo.tblNhanVien
+	SELECT * FROM dbo.tblDonDatHang
+	SELECT * FROM dbo.tblChiTietDatHang
+	SELECT * FROM dbo.tblDonNhapKho
+	SELECT * FROM dbo.tblChiTietNhapKho

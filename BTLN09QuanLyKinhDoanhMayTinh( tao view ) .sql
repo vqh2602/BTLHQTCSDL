@@ -312,7 +312,7 @@ INSERT INTO dbo.tblChiTietDatHang VALUES
 	--11 Tạo view cho biết tổng số tiền hàng thu được trong mỗi tháng của năm 2020
 	CREATE VIEW vv_tongtienhangthang2020
 	AS
-	SELECT tblDonDatHang.iSoHD,MONTH(dNgayGiaoHang) AS [Tháng],SUM(iSoLuongMua*fGiaBan+iSoLuongMua*fGiaBan*fMucGiamGia) AS [Tổng tiền]
+	SELECT tblDonDatHang.iSoHD,MONTH(dNgayGiaoHang) AS [Tháng],SUM(iSoLuongMua*fGiaBan - iSoLuongMua*fGiaBan*fMucGiamGia) AS [Tổng tiền]
 	FROM dbo.tblChiTietDatHang,dbo.tblDonDatHang
 	WHERE dbo.tblDonDatHang.iSoHD = tblChiTietDatHang.iSoHD
 	AND YEAR(dNgayGiaoHang)=2020
@@ -383,7 +383,7 @@ INSERT INTO dbo.tblChiTietDatHang VALUES
 					WHERE dbo.tblDonDatHang.iSoHD = dbo.tblChiTietDatHang.iSoHD 
 					AND dbo.tblChiTietDatHang.sMaHang = tblMatHang.sMaHang
 					GROUP BY tblMatHang.sMaHang
-					ORDER BY SUM(iSoLuongMua*fGiaBan + iSoLuongMua*fGiaBan*fMucGiamGia) DESC		
+					ORDER BY SUM(iSoLuongMua*fGiaBan - iSoLuongMua*fGiaBan*fMucGiamGia) DESC		
 				)
 
 	SELECT * FROM vv_top5sanphamcaonhat
@@ -391,18 +391,18 @@ INSERT INTO dbo.tblChiTietDatHang VALUES
 	-- 18. Hóa đơn có tổng tiền cao nhất (đơn đặt hàng)
 	CREATE VIEW vv_hoadonMAX
 	AS
-    SELECT TOP 1 tblDonDatHang.iSoHD,SUM(iSoLuongMua*fGiaBan+iSoLuongMua*fGiaBan*fMucGiamGia) AS [Tổng tiền Max]
+    SELECT TOP 1 tblDonDatHang.iSoHD,SUM(iSoLuongMua*fGiaBan - iSoLuongMua*fGiaBan*fMucGiamGia) AS [Tổng tiền Max]
 	FROM dbo.tblDonDatHang,dbo.tblChiTietDatHang
 	WHERE dbo.tblDonDatHang.iSoHD = dbo.tblChiTietDatHang.iSoHD
 	GROUP BY tblDonDatHang.iSoHD
-	ORDER BY SUM(iSoLuongMua*fGiaBan+iSoLuongMua*fGiaBan*fMucGiamGia) DESC
+	ORDER BY SUM(iSoLuongMua*fGiaBan-iSoLuongMua*fGiaBan*fMucGiamGia) DESC
 
 	SELECT * FROM vv_hoadonMAX
 
 	-- 19. Tạo view cho biết số lượng và tổng tiền đã bán của từng sản phẩm trong năm 2020
 		CREATE VIEW vv_soluongvatongtiensp2020
 	AS
-    SELECT tblMatHang.sMaHang,SUM(iSoLuongMua) AS [Tổng số lượng],SUM(iSoLuongMua*fGiaBan+iSoLuongMua*fGiaBan*fMucGiamGia) AS [Tổng tiền Max]
+    SELECT tblMatHang.sMaHang,SUM(iSoLuongMua) AS [Tổng số lượng],SUM(iSoLuongMua*fGiaBan - iSoLuongMua*fGiaBan*fMucGiamGia) AS [Tổng tiền Max]
 	FROM dbo.tblDonDatHang,dbo.tblChiTietDatHang,dbo.tblMatHang
 	WHERE dbo.tblDonDatHang.iSoHD = dbo.tblChiTietDatHang.iSoHD
 	AND tblMatHang.sMaHang = tblChiTietDatHang.sMaHang

@@ -58,11 +58,11 @@
 	SELECT*FROM tblChiTietDatHang
 
 	--6. Tăng lương cơ bản cho nhân viên (x %) có lượng bán ra lớn hơn chỉ tiêu của một năm --
-	CREATE PROC sptangluongcoban_nhanvien (@chitieu int, @nam int)
+		CREATE PROC sptangluongcoban_nhanvien (@chitieu int, @nam int, @phantram float)
 	AS 
 		BEGIN 
 		UPDATE dbo.tblNhanVien
-		SET fLuongCoBan = fLuongCoBan + fLuongCoBan * 0.1
+		SET fLuongCoBan = fLuongCoBan + fLuongCoBan * @phantram
 		WHERE iMaNV IN ( SELECT dbo.tblNhanVien.iMaNV
 						 FROM dbo.tblNhanVien, dbo.tblDonDatHang, dbo.tblChiTietDatHang
 						 WHERE tblDonDatHang.iMaNV = tblNhanVien.iMaNV
@@ -72,7 +72,7 @@
 						HAVING SUM (iSoLuongMua) > @chitieu )	
 		END
 
-		EXEC sptangluongcoban_nhanvien 11,2020
+		EXEC sptangluongcoban_nhanvien 11,2020,0.1
 
 	--7. Doanh số bán ra của một mặt hàng trong năm
 	CREATE PROC spdoanhso1mathang1nam (@mahang nvarchar(10), @nam int)
@@ -161,11 +161,11 @@
 	EXEC spchitiet_mathang N'MH06'
 
 	--13. Giảm giá với đơn đặt hàng đã tạo chưa áp dụng giảm giá và được đặt hàng trong ngày nào đó ( mức giảm giá x%) 
-	CREATE PROC spmucgiamgia_dondathang (@sohd int, @ngaydat datetime )
+	CREATE PROC spmucgiamgia_dondathang (@sohd int, @ngaydat datetime, @mucgiamgia float )
 	AS
     BEGIN
 		UPDATE dbo.tblChiTietDatHang
-		SET fMucGiamGia = fMucGiamGia+ 0.1
+		SET fMucGiamGia = fMucGiamGia+ @mucgiamgia
 		WHERE iSoHD IN ( SELECT tblDonDatHang.iSoHD
 						 FROM dbo.tblDonDatHang,dbo.tblChiTietDatHang,dbo.tblMatHang
 						 WHERE tblDonDatHang.iSoHD = tblChiTietDatHang.iSoHD
@@ -176,7 +176,7 @@
 						)
 	END 
 
-	EXEC spmucgiamgia_dondathang 510,'2020/01/14'
+	EXEC spmucgiamgia_dondathang 510,'2020/01/14',0.1
 
 	--14 Số tiền mà nhân viên sử dụng để nhập kho và số hóa đơn đã xử lí
 	CREATE PROC spthongkenhapkho_nhanvien ( @manv int )
